@@ -7,6 +7,9 @@ const io = new Server(httpServer);
 const celdasCallback = require("./celdas");
 const autorizacionCallback = require("./autorizacion");
 
+// enable CORS
+io.origins("*:*");
+
 io.on("connection", (/* socket */) => {
   console.log("a user connected");
 });
