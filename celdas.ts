@@ -1,5 +1,5 @@
-const celdas = (io) => {
-  io.on("connection", (socket) => {
+const celdas = (io: any) => {
+  io.on("connection", (/* socket */) => {
     console.log("a user connected to celdas");
   });
 };

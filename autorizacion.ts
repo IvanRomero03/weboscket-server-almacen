@@ -1,5 +1,5 @@
-const autorizacion = (io) => {
-  io.on("connection", (socket) => {
+const autorizacion = (io: any) => {
+  io.on("connection", (/* socket */) => {
     console.log("a user connected to autorizacion");
   });
 };
