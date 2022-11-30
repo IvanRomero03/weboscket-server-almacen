@@ -65,9 +65,6 @@ io.on("connection", (socket: any) => {
   });
   socket.on("autorized", (msg: any) => {
     console.log("autorized: " + msg);
-    for (let i = 0; i < currentPetition.celdas.length; i++) {
-      socket.broadcast.emit("open", currentPetition.celdas[i].celdaId);
-    }
     client
       .post("Prestamo/createPrestamo", {
         userId: currentPetition.prestamoInfo.userId,
@@ -77,6 +74,9 @@ io.on("connection", (socket: any) => {
       .catch((err: any) => {
         console.log(err);
       });
+    for (let i = 0; i < currentPetition.celdas.length; i++) {
+      socket.broadcast.emit("open", currentPetition.celdas[i].celdaId);
+    }
     currentPetition = null as any;
   });
   socket.on("denied", (msg: any) => {
