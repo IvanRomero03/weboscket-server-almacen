@@ -62,9 +62,10 @@ io.on("connection", (socket: any) => {
   socket.on("createPetition", (peticion: Petition) => {
     currentPetition = peticion;
     socket.broadcast.emit("Peticion", peticion.credencial.credential);
+    socket.broadcast.emit("petitionResponse", "Peticion creada");
   });
+
   socket.on("autorized", (msg: any) => {
-    console.log("autorized: " + msg);
     client
       .post("Prestamo/createPrestamo", {
         userId: currentPetition.prestamoInfo.userId,
@@ -79,13 +80,22 @@ io.on("connection", (socket: any) => {
     }
     currentPetition = null as any;
   });
+
+  socket.on("autorizedResponse", (msg: any) => {
+    socket.broadcast.emit("autorizedResponse", msg);
+  });
+
   socket.on("denied", (msg: any) => {
-    console.log("denied: " + msg);
     currentPetition = null as any;
   });
   socket.on("timeout", (msg: any) => {
-    console.log("timeout: " + msg);
     currentPetition = null as any;
+  });
+  socket.on("open", (msg: any) => {
+    socket.broadcast.emit("open", msg);
+  });
+  socket.on("openResponse", (msg: any) => {
+    socket.broadcast.emit("openResponse", msg);
   });
 });
 
