@@ -1,5 +1,5 @@
 const createServer = require("http").createServer;
-const Server = require("socket.io").Server;
+const Server = require("socket.io");
 const express = require("express");
 const app = express();
 
@@ -21,20 +21,26 @@ const autorizacionCallback = require("./autorizacion");
 
 // enable CORS
 
-io.on("connection", (/* socket */) => {
+// receive message from "mensaje" channel
+io.on("connection", (socket: any) => {
   console.log("a user connected");
+  socket.on("mensaje", (msg: any) => {
+    console.log("message: " + msg);
+
+    socket.broadcast.emit("mensaje", msg);
+  });
 });
 
 io.of("/celdas").on("connection", (/* socket */) => {
   console.log("a user connected to celdas");
 });
-celdasCallback(io.of("/celdas"));
+//celdasCallback(io.of("/celdas"));
 
 io.of("/autorizacion").on("connection", (/* socket */) => {
   console.log("a user connected to autorizacion");
 });
 
-autorizacionCallback(io.of("/autorizacion"));
+//autorizacionCallback(io.of("/autorizacion"));
 
 server.listen(process.env.PORT || 3000, () => {
   console.log("listening on *:3000");

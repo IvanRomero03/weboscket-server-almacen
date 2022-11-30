@@ -1,6 +1,6 @@
 "use strict";
 const createServer = require("http").createServer;
-const Server = require("socket.io").Server;
+const Server = require("socket.io");
 const express = require("express");
 const app = express();
 const server = createServer(app);
@@ -16,8 +16,16 @@ const io = new Server(server, {
 const celdasCallback = require("./celdas");
 const autorizacionCallback = require("./autorizacion");
 // enable CORS
-io.on("connection", ( /* socket */) => {
+// io.on("connection", () => {
+//   console.log("a user connected");
+// });
+// receive message from "mensaje" channel
+io.on("connection", (socket) => {
     console.log("a user connected");
+    socket.on("mensaje", (msg) => {
+        console.log("message: " + msg);
+        socket.broadcast.emit("mensaje", msg);
+    });
 });
 io.of("/celdas").on("connection", ( /* socket */) => {
     console.log("a user connected to celdas");
