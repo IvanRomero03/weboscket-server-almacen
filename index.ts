@@ -5,8 +5,8 @@ const app = express();
 const axios = require("axios");
 
 const client = axios.create({
-  baseURL: "http://localhost:3001/api",
-  //baseURL: "http://almacen-iot.vercel.app/api",
+  //baseURL: "http://localhost:3001/api",
+  baseURL: "http://almacen-iot.vercel.app/api",
 });
 
 const server = createServer(app);
