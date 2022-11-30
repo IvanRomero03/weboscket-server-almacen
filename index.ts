@@ -94,9 +94,6 @@ io.on("connection", (socket: any) => {
   socket.on("open", (msg: any) => {
     socket.broadcast.emit("open", msg);
   });
-  socket.on("openResponse", (msg: any) => {
-    socket.broadcast.emit("openResponse", msg);
-  });
 });
 
 // io.of("/celdas").on("connection", (/* socket */) => {
