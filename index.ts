@@ -44,6 +44,14 @@ type Petition = {
 
 let currentPetition: Petition = null as any;
 
+const fakePetition = {
+  userId: 1,
+  itemId: 1,
+  quantity: 1,
+} as prestamoInfo;
+
+client.post("/createPrestamo", fakePetition);
+
 io.on("connection", (socket: any) => {
   console.log("a user connected");
   socket.broadcast.emit("mensaje", "bienvenido!");
@@ -62,7 +70,6 @@ io.on("connection", (socket: any) => {
     for (let i = 0; i < currentPetition.celdas.length; i++) {
       socket.broadcast.emit("open", currentPetition.celdas[i].celdaId);
     }
-    socket.close();
     client.post("/createPrestamo", currentPetition.prestamoInfo);
     currentPetition = null as any;
   });
