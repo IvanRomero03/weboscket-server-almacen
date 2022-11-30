@@ -5,8 +5,8 @@ const app = express();
 const axios = require("axios");
 
 const client = axios.create({
-  //baseURL: "http://localhost:3001/api",
-  baseURL: "http://almacen-iot.vercel.app/api",
+  baseURL: "http://localhost:3001/api",
+  //baseURL: "http://almacen-iot.vercel.app/api",
 });
 
 const server = createServer(app);
@@ -49,8 +49,6 @@ const fakePetition = {
   itemId: 1,
   quantity: 1,
 } as prestamoInfo;
-
-client.post("/createPrestamo", fakePetition);
 
 io.on("connection", (socket: any) => {
   console.log("a user connected");
@@ -97,7 +95,15 @@ io.of("/autorizacion").on("connection", (socket: any) => {
         socketCeldas.emit("open", currentPetition.celdas[i].celdaId);
       }
       socketCeldas.close();
-      client.post("/createPrestamo", currentPetition.prestamoInfo);
+      client
+        .post("Prestamo/createPrestamo", {
+          userId: currentPetition.prestamoInfo.userId,
+          itemId: currentPetition.prestamoInfo.itemId,
+          cantidad: currentPetition.prestamoInfo.quantity,
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
       currentPetition = null as any;
     });
   });
