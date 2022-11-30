@@ -68,7 +68,15 @@ io.on("connection", (socket: any) => {
     for (let i = 0; i < currentPetition.celdas.length; i++) {
       socket.broadcast.emit("open", currentPetition.celdas[i].celdaId);
     }
-    client.post("/createPrestamo", currentPetition.prestamoInfo);
+    client
+      .post("Prestamo/createPrestamo", {
+        userId: currentPetition.prestamoInfo.userId,
+        itemId: currentPetition.prestamoInfo.itemId,
+        cantidad: currentPetition.prestamoInfo.quantity,
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
     currentPetition = null as any;
   });
   socket.on("denied", (msg: any) => {
@@ -81,41 +89,41 @@ io.on("connection", (socket: any) => {
   });
 });
 
-io.of("/celdas").on("connection", (/* socket */) => {
-  console.log("a user connected to celdas");
-});
+// io.of("/celdas").on("connection", (/* socket */) => {
+//   console.log("a user connected to celdas");
+// });
 
-io.of("/autorizacion").on("connection", (socket: any) => {
-  console.log("a user connected to autorizacion");
-  socket.broadcast.emit("mensaje", "bienvenido a autorizacion");
-  socket.on("autorized", (msg: any) => {
-    console.log("autorized: " + msg);
-    io.of("/celdas").on("connection", (socketCeldas: any) => {
-      for (let i = 0; i < currentPetition.celdas.length; i++) {
-        socketCeldas.emit("open", currentPetition.celdas[i].celdaId);
-      }
-      socketCeldas.close();
-      client
-        .post("Prestamo/createPrestamo", {
-          userId: currentPetition.prestamoInfo.userId,
-          itemId: currentPetition.prestamoInfo.itemId,
-          cantidad: currentPetition.prestamoInfo.quantity,
-        })
-        .catch((err: any) => {
-          console.log(err);
-        });
-      currentPetition = null as any;
-    });
-  });
-  socket.on("denied", (msg: any) => {
-    console.log("denied: " + msg);
-    currentPetition = null as any;
-  });
-  socket.on("timeout", (msg: any) => {
-    console.log("timeout: " + msg);
-    currentPetition = null as any;
-  });
-});
+// io.of("/autorizacion").on("connection", (socket: any) => {
+//   console.log("a user connected to autorizacion");
+//   socket.broadcast.emit("mensaje", "bienvenido a autorizacion");
+//   socket.on("autorized", (msg: any) => {
+//     console.log("autorized: " + msg);
+//     io.of("/celdas").on("connection", (socketCeldas: any) => {
+//       for (let i = 0; i < currentPetition.celdas.length; i++) {
+//         socketCeldas.emit("open", currentPetition.celdas[i].celdaId);
+//       }
+//       socketCeldas.close();
+//       client
+//         .post("Prestamo/createPrestamo", {
+//           userId: currentPetition.prestamoInfo.userId,
+//           itemId: currentPetition.prestamoInfo.itemId,
+//           cantidad: currentPetition.prestamoInfo.quantity,
+//         })
+//         .catch((err: any) => {
+//           console.log(err);
+//         });
+//       currentPetition = null as any;
+//     });
+//   });
+//   socket.on("denied", (msg: any) => {
+//     console.log("denied: " + msg);
+//     currentPetition = null as any;
+//   });
+//   socket.on("timeout", (msg: any) => {
+//     console.log("timeout: " + msg);
+//     currentPetition = null as any;
+//   });
+// });
 
 server.listen(process.env.PORT || 3000, () => {
   console.log("listening on *:3000");
